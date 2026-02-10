@@ -1,0 +1,55 @@
+services:
+  # 1. Veri Tabanı (Kalıcı Veriler)
+  mysql:
+    image: mysql:8.0
+    container_name: auth-mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root_password
+      MYSQL_DATABASE: server_auth
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+
+  # 2. Önbellek (Hızlı Oturumlar)
+  redis:
+    image: redis:alpine
+    container_name: auth-redis
+    restart: always
+    ports:
+      - "6379:6379"
+
+  # 3. Mesaj Kuyruğu (Sinir Sistemi)
+  nats:
+    image: nats:latest
+    container_name: auth-nats
+    restart: always
+    ports:
+      - "4222:4222" # İstemci bağlantısı
+      - "8222:8222" # İzleme paneli (HTTP)
+
+  # 4. Golang Backend (Mantık Katmanı)
+  go-backend:
+    build: ./go-backend
+    container_name: auth-backend
+    restart: always
+    tty: true
+    stdin_open: true
+    depends_on:
+      - mysql
+      - redis
+      - nats
+    environment:
+      NATS_URL: "nats://nats:4222"
+      REDIS_URL: "redis:6379"
+      MYSQL_URL: "root:root_password@tcp(mysql:3306)/server_auth"
+      
+    volumes:
+      - ./go-backend:/app
+    
+
+volumes:
+
+  mysql_data:
+  
