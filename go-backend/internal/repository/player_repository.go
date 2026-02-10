@@ -46,7 +46,7 @@ func (r *PlayerRepository) GetPlayerByID(ctx context.Context, uuid string) (*mod
 	return &player, nil
 }
 
-func (r *PlayerRepository) RegisterPlayer(ctx context.Context, req *models.RegisterPlayerRequest) bool {
+func (r *PlayerRepository) RegisterPlayer(ctx context.Context, req *models.Player) error {
 	// Kayıt işlemi burada yapılır
 	// Örneğin, yeni bir oyuncu oluşturup veritabanına kaydedebilirsiniz.
 	// Kayıt işlemi başarılı olduktan sonra, oyuncu verisini Redis'e kaydedebilirsiniz.
@@ -57,10 +57,10 @@ func (r *PlayerRepository) RegisterPlayer(ctx context.Context, req *models.Regis
 		Username: req.Username,
 		Password: string(hashedPassword),
 	}).Error; err != nil {
-		return false
+		return err
 	}
 	slog.Info("✅ Kayıt tamamlandı", "user", req.Username)
-	return true
+	return nil
 }
 
 func (r *PlayerRepository) IsRegistered(ctx context.Context, uuid models.IsRegisteredRequest) (bool, error) {

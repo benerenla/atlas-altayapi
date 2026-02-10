@@ -40,16 +40,24 @@ func (m *MessageBuilder) handlePlayerRegister(msg *nats.Msg, repo *repository.Pl
 	var p models.RegisterPlayerRequest
 	json.Unmarshal(msg.Data, &p)
 
-	// Repository'yi kullanarak veriyi işle
-	player := repo.RegisterPlayer(context.Background(), &p)
+	newPlayer := models.Player{
+		UUID:     p.UUID,
+		Username: p.Username,
+		Password: p.Password,
+	}
 
-	if !player {
-		slog.Error("❌ Oyuncu işlenemedi")
+	// Repository'yi kullanarak veriyi işle
+	err := repo.RegisterPlayer(context.Background(), &newPlayer)
+
+	if err != nil {
+		slog.Error("❌ Oyuncu işlenemedi", "error", err)
+		msg.Respond([]byte("ERROR_DATABASE"))
 		return
 	}
 
 	// ... (Kayıt veya Giriş mantığı burada çalışır)
 	slog.Info("✅ Oyuncu işlendi", "user", p.Username)
+	msg.Respond([]byte("SUCCESS"))
 }
 
 func (m *MessageBuilder) handlePlayerIsRegistered(msg *nats.Msg, repo *repository.PlayerRepository) {

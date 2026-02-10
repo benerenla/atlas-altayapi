@@ -13,9 +13,9 @@ func main() {
 	}
 	defer nc.Close() // Bağlantıyı düzgün kapat
 
-	data := `{"uuid": "550e8400-e29b-41d4-a716-446655440000"}`
+	data := `{"uuid": "550e8400-e29b-41d4-a716-446655440000", "username": "testuser", "password": "testpass"}`
 
-	msg, err := nc.Request("mc.player.is_registered", []byte(data), 2*time.Second)
+	msg, err := nc.Request("mc.player.register", []byte(data), 2*time.Second)
 	if err != nil {
 		panic(err)
 	}
