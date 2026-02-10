@@ -13,7 +13,7 @@ type RedisConfig struct {
 	Port int
 }
 
-func NewRedis(config RedisConfig) {
+func NewRedis(config RedisConfig) *redis.Client {
 	rdb := redis.NewClient(&redis.Options{
 		Addr:     config.Host + ":" + strconv.Itoa(config.Port),
 		Password: "", // Şifre yoksa boş bırakın
@@ -22,7 +22,8 @@ func NewRedis(config RedisConfig) {
 	_, err := rdb.Ping(context.Background()).Result()
 	if err != nil {
 		slog.Error("❌ Redis bağlantısı başarısız.", "error", err)
-		return
+		return nil
 	}
 	slog.Info("✅ Redis bağlantısı başarılı ")
+	return rdb
 }
