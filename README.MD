@@ -1,4 +1,4 @@
-# 🚀 GoAuth: High-Performance Minecraft Authenticationn
+# 🚀 GoAuth: High-Performance Minecraft Authentication
 
 ![Java](https://img.shields.io/badge/Java-21-orange?style=for-the-badge&logo=openjdk)
 ![Go](https://img.shields.io/badge/Go-1.24-blue?style=for-the-badge&logo=go)
