@@ -136,3 +136,7 @@ Development sırasında kullanılan geçici veriler
 * Integration testler
 
 * Mock servisler (NATS / Redis / DB)
+
+# 📄 Lisans
+
+MIT License © Atlas
