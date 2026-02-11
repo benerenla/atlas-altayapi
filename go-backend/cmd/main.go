@@ -21,12 +21,12 @@ func main() {
 	slog.SetDefault(logger)
 	slog.Info("Sistem başlatılıyor..")
 	redisClient := database.NewRedis(database.RedisConfig{Host: "auth-redis", Port: 6379})
-	m := messages.NewMessage("nats://auth-nats:4222")
+	messages.NewMessage("nats://auth-nats:4222")
 	mysqlClient, _ := database.NewMysql("root:root_password@tcp(auth-mysql:3306)/server_auth?charset=utf8mb4&parseTime=True&loc=Local")
-
+	handler := messages.NewAuthHandler(messages.NewMessage("nats://auth-nats:4222").GetConnection())
 	repository := repository.NewPlayerRepository(mysqlClient.DB, redisClient)
 
-	m.RegisterHandlers(repository)
+	handler.RegisterHandlers(repository)
 
 	select {}
 }

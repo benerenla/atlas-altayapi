@@ -1,0 +1,7 @@
+global:
+  scrape_interval: 5s # Veri toplama sıklığı (Test için 5s idealdir)
+
+scrape_configs:
+  - job_name: "go-backend"
+    static_configs:
+      - targets: ["go-backend:2112"] # Docker ağındaki servis adın ve metrik portun

@@ -15,9 +15,10 @@ type Player struct {
 	Password string `gorm:"type:varchar(255);not null" json:"-"` // Şifre alanı JSON çıktısında gösterilmez
 
 	// Verifiction
-	Email     string `gorm:"type:varchar(255);uniqueIndex" json:"email"`
-	Verified  bool   `gorm:"default:false" json:"verified"`
-	DiscordID string `gorm:"type:varchar(20);uniqueIndex" json:"discord_id"`
+	Email      *string `gorm:"type:varchar(255);uniqueIndex" json:"email"`
+	Verified   bool    `gorm:"default:false" json:"verified"`
+	VerifyCode *string `gorm:"type:varchar(255)" json:"-"`
+	DiscordID  *string `gorm:"type:varchar(20);uniqueIndex" json:"discord_id"`
 
 	// Oyun Verileri
 	Coins int64  `gorm:"default:0" json:"coins"`
@@ -53,8 +54,14 @@ type IsRegisteredRequest struct {
 	UUID string `json:"uuid" binding:"required"`
 }
 
-func (p *Player) UnmarshalJSON(b []byte) error {
-	panic("unimplemented")
+type LoginPlayerRequest struct {
+	UUID     string `json:"uuid" binding:"required"`
+	Username string `json:"username" binding:"required"`
+	Password string `json:"password" binding:"required"`
+}
+
+type SessionValidateRequest struct {
+	UUID string `json:"uuid" binding:"required"`
 }
 
 func (p *Player) toJSON() ([]byte, error) {
